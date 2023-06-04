@@ -9,7 +9,9 @@ import { ILogin } from "../interface/ILogin";
 export const authCallEndPoint = () => {
   const backEndUrl = process.env.REACT_APP_BACKEND_VERCEL_URL;
 
-  const header = { "Content-Type": "application/json" };
+  const header = { "Content-Type": "application/json",
+                   "Access-Control-Allow-Origin": "*",
+                   };
 
   const login = async (
     loginInfo: ILogin
