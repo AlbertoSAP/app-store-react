@@ -10,9 +10,52 @@ import {
 import "../App.css";
 import "./auth.css";
 import fondo from "../fondoPaisaje.jpg";
+import { useEffect, useState } from "react";
+import { ILogin } from "../interface/ILogin";
+import { authCallEndPoint } from "../services/auth";
 
 export const Login = () => {
+  const { login } = authCallEndPoint()
   const title: string = "Bienvenido a App Store NI";
+
+ const initialStateLoginInfo:ILogin = {
+  email:'alberto83980654@gmail.com',
+  password:'81887782asap'
+ }
+
+//  state for inputs 
+const [loginInfo, setLoginInfo] = useState<ILogin>(initialStateLoginInfo)
+// dispatch start 
+const [isReadyLogin, setIsReadyLogin] = useState<boolean>(false)
+
+const onchangeLoginInfo = (event:React.ChangeEvent<HTMLInputElement>) =>{
+  
+   event.preventDefault()
+
+   const {name,value} = event.target
+
+   setLoginInfo(
+    {...loginInfo,
+      [name]:value
+    }
+   )
+}
+
+useEffect(() => {
+  if (isReadyLogin) {
+    const handlerLogin = async () => {
+      try {
+        const result = await login(loginInfo);
+      } catch (error) {
+        setIsReadyLogin(false);
+      }
+    };
+    handlerLogin();
+  }
+  setIsReadyLogin(false);
+}, [isReadyLogin]);
+
+
   return (
     <>
       <div
@@ -61,7 +104,6 @@ export const Login = () => {
             >
               {title}
             </Typography>
-
             <TextField
               margin="normal"
               required
@@ -71,6 +113,8 @@ export const Login = () => {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={ onchangeLoginInfo }
+              value={loginInfo.email}
             />
             <TextField
               margin="normal"
@@ -81,13 +125,15 @@ export const Login = () => {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={ onchangeLoginInfo }
+              value={loginInfo.password}
             />
             <Stack
               direction="row"
               spacing={2}
               sx={{ justifyContent: "center" }}
             >
-              <Button variant="contained" color="info">
+              <Button onClick={ () => setIsReadyLogin(true)} variant="contained" color="info">
                 Login
               </Button>
             </Stack>
