@@ -5,6 +5,7 @@ import {
   IResult,
 } from "../interface/IEndPointResponse ";
 import { ILogin } from "../interface/ILogin";
+import { IRegister } from "../interface/IRegister";
 
 export const authCallEndPoint = () => {
   const backEndUrl = process.env.REACT_APP_BACKEND_VERCEL_URL;
@@ -32,5 +33,21 @@ export const authCallEndPoint = () => {
     }
   };
 
-  return { login };
+   const createAccount = async (dataAcount: IRegister) => {
+    try {
+      const userInfo = await axios.post(
+          `${backEndUrl}/auth/register`,
+          dataAcount,
+          { headers: header }
+      );
+      console.log(userInfo, 'Service register');
+
+      return userInfo;
+  } catch (error) {
+
+    const { statusText, status } = (error as IResponse).response.data;
+      throw { error: statusText, statusCode: status };
+    }
+}
+  return { login,createAccount };
 };
