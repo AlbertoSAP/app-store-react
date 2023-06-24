@@ -45,7 +45,7 @@ useEffect(() => {
   if (isReadyLogin) {
     const handlerLogin = async () => {
       try {
-        const result = await login(loginInfo);
+        await login(loginInfo);
       } catch (error) {
         setIsReadyLogin(false);
       }
@@ -53,7 +53,7 @@ useEffect(() => {
     handlerLogin();
   }
   setIsReadyLogin(false);
-}, [isReadyLogin]);
+}, [isReadyLogin, login, loginInfo]);
 
 
   return (

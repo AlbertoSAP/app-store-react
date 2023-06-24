@@ -8,11 +8,9 @@ import { ILogin } from "../interface/ILogin";
 import { IRegister } from "../interface/IRegister";
 
 export const authCallEndPoint = () => {
-  const backEndUrl = process.env.REACT_APP_BACKEND_VERCEL_URL;
+  const backEndUrl:string = process.env.REACT_APP_BACKEND_RENDER ?? '';
 
-  const header = { "Content-Type": "application/json",
-                   "Access-Control-Allow-Origin": "*",
-                   };
+  const header = { "Content-Type": "application/json"};
 
   const login = async (
     loginInfo: ILogin
@@ -23,13 +21,12 @@ export const authCallEndPoint = () => {
         JSON.stringify(loginInfo),
         { headers: header }
       );
-
       return userInfo.data;
     } catch (error) {
 
-      const { statusText, status } = (error as IResponse).response.data;
+      const { statusText } = (error as IResponse).response.data;
 
-      throw { error: statusText, statusCode: status };
+      throw new Error (statusText);
     }
   };
 
@@ -45,8 +42,8 @@ export const authCallEndPoint = () => {
       return userInfo;
   } catch (error) {
 
-    const { statusText, status } = (error as IResponse).response.data;
-      throw { error: statusText, statusCode: status };
+    const { statusText } = (error as IResponse).response.data;
+      throw new Error (statusText);
     }
 }
   return { login,createAccount };
